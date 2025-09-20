@@ -1,18 +1,14 @@
 import { AxiosError, AxiosResponse } from "axios";
 
 import axios from "../axios";
-import {
-  // Category,
-  CategoriesResponse,
-  // NewCategory
-} from "../../types";
+import { Category } from "../../types";
 
 export const getCategories = async ({
   onSuccess,
   onError,
   onLoading,
 }: {
-  onSuccess?: (data: CategoriesResponse[]) => void;
+  onSuccess?: (data: Category[]) => void;
   onError?: (error: AxiosError) => void;
   onLoading?: (isLoading: boolean) => void;
 }) => {
@@ -23,7 +19,7 @@ export const getCategories = async ({
     method: "get",
   })
     .then((response: AxiosResponse) => {
-      const data: CategoriesResponse[] = response.data;
+      const data: Category[] = response.data;
       if (response.status === 200 && onSuccess) onSuccess(data);
     })
     .catch((error: AxiosError) => {

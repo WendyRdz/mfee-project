@@ -2,40 +2,20 @@ import React, {
   createContext,
   useState,
   // useContext,
-  useCallback,
-} from "react";
+  useCallback
+} from 'react';
 
-import { NewPost, Post, PostsResponse } from "../types";
 // import { SnackbarContext } from "../context";
-import {
-  createPost,
-  deletePost,
-  getPosts,
-  getPostsByCategory,
-  updatePost,
-} from "../api";
+import { createPost, deletePost, getPosts, getPostsByCategory, updatePost } from '../api';
+import { CreatePostPayload, Post, UpdatePostPayload } from '../types';
 
 interface PostContextProps {
   posts: Post[] | null;
   loadingPosts: boolean;
-  addPost: (newPost: NewPost) => void;
-  removePost: ({
-    postID,
-    selectedCategoryID,
-  }: {
-    postID: string;
-    selectedCategoryID?: string;
-  }) => void;
+  addPost: (newPost: CreatePostPayload) => void;
+  removePost: ({ postID, selectedCategoryID }: { postID: string; selectedCategoryID?: string }) => void;
   getPostList: (selectedCategoryID?: string) => void;
-  updatePostData: ({
-    postID,
-    updatedPost,
-    selectedCategoryID,
-  }: {
-    postID: string;
-    updatedPost: NewPost;
-    selectedCategoryID?: string;
-  }) => void;
+  updatePostData: ({ payload, selectedCategoryID }: { payload: UpdatePostPayload; selectedCategoryID?: string }) => void;
 }
 
 interface PostProviderProps {
@@ -48,12 +28,10 @@ export const PostContext = createContext<PostContextProps>({
   addPost: () => {},
   removePost: () => {},
   getPostList: () => {},
-  updatePostData: () => {},
+  updatePostData: () => {}
 });
 
-export function PostProvider({
-  children,
-}: PostProviderProps): React.JSX.Element {
+export function PostProvider({ children }: PostProviderProps): React.JSX.Element {
   // const createAlert = useContext(SnackbarContext);
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [loadingPosts, setLoadingPosts] = useState(false);
@@ -71,28 +49,18 @@ export function PostProvider({
 
   const getPostList = useCallback(
     async (selectedCategoryID?: string) => {
-      const onSuccess = async (data: PostsResponse[]) => {
-        const newList = data.map((post) => ({
-          id: post._id,
-          title: post.title,
-          image: post.image,
-          description: post.description,
-          category: post.category,
-          comments: post.comments,
-        }));
-        setPosts(newList);
+      const onSuccess = async (data: Post[]) => {
+        setPosts(data);
       };
 
       const params = { onSuccess, onError, onLoading };
-      selectedCategoryID
-        ? await getPostsByCategory({ selectedCategoryID, ...params })
-        : await getPosts(params);
+      selectedCategoryID ? await getPostsByCategory({ selectedCategoryID, ...params }) : await getPosts(params);
     },
     [onError]
   );
 
   const addPost = useCallback(
-    async (newPost: NewPost) => {
+    async (newPost: CreatePostPayload) => {
       const onSuccess = async () => {
         await getPostList();
         // createAlert({
@@ -107,15 +75,7 @@ export function PostProvider({
   );
 
   const updatePostData = useCallback(
-    async ({
-      postID,
-      updatedPost,
-      selectedCategoryID,
-    }: {
-      postID: string;
-      updatedPost: NewPost;
-      selectedCategoryID?: string;
-    }) => {
+    async ({ payload, selectedCategoryID }: { payload: UpdatePostPayload; selectedCategoryID?: string }) => {
       const onSuccess = async () => {
         await getPostList(selectedCategoryID);
         // createAlert({
@@ -124,19 +84,13 @@ export function PostProvider({
         // });
       };
 
-      await updatePost({ postID, updatedPost, onSuccess, onError, onLoading });
+      await updatePost({ payload: payload, onSuccess, onError, onLoading });
     },
     [onError, getPostList]
   );
 
   const removePost = useCallback(
-    async ({
-      postID,
-      selectedCategoryID,
-    }: {
-      postID: string;
-      selectedCategoryID?: string;
-    }) => {
+    async ({ postID, selectedCategoryID }: { postID: string; selectedCategoryID?: string }) => {
       const onSuccess = async () => {
         await getPostList(selectedCategoryID);
         // createAlert({
@@ -158,7 +112,7 @@ export function PostProvider({
         addPost,
         removePost,
         getPostList,
-        updatePostData,
+        updatePostData
       }}
     >
       {children}

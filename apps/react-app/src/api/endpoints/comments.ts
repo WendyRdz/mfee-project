@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from "axios";
 
 import axios from "../axios";
-import { NewComment, CommentResponse } from "../../types";
+import { CreateCommentPayload } from "../../types";
 
 export const createComment = async ({
   postID,
@@ -11,8 +11,8 @@ export const createComment = async ({
   onLoading,
 }: {
   postID: string;
-  newComment: NewComment;
-  onSuccess?: (data: CommentResponse) => void;
+  newComment: CreateCommentPayload;
+  onSuccess?: () => void;
   onError?: (error: AxiosError) => void;
   onLoading?: (isLoading: boolean) => void;
 }) => {
@@ -24,8 +24,7 @@ export const createComment = async ({
     data: newComment,
   })
     .then((response: AxiosResponse) => {
-      const data: CommentResponse = response.data;
-      if (response.status === 201 && onSuccess) onSuccess(data);
+      if (response.status === 201 && onSuccess) onSuccess();
     })
     .catch((error: AxiosError) => {
       console.error(`${error}`);

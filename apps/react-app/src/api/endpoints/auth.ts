@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from "axios";
 
 import axios from "../axios";
-import { User, AuthResponse, AuthLoginResponse, NewUser } from "../../types";
+import { AuthResponse, LoginPayload, RegisterPayload } from "../../types";
 
 export const createUser = async ({
   newUser,
@@ -9,7 +9,7 @@ export const createUser = async ({
   onError,
   onLoading,
 }: {
-  newUser: NewUser;
+  newUser: RegisterPayload;
   onSuccess?: (data: AuthResponse) => void;
   onError?: (error: AxiosError) => void;
   onLoading?: (isLoading: boolean) => void;
@@ -38,8 +38,8 @@ export const login = async ({
   onError,
   onLoading,
 }: {
-  user: User;
-  onSuccess?: (data: AuthLoginResponse) => void;
+  user: LoginPayload;
+  onSuccess?: (data: AuthResponse) => void;
   onError?: (error: AxiosError) => void;
   onLoading?: (isLoading: boolean) => void;
 }) => {
@@ -51,10 +51,8 @@ export const login = async ({
     data: user,
   })
     .then((response: AxiosResponse) => {
-      const data: AuthLoginResponse = response.data;
+      const data: AuthResponse = response.data;
       if (response.status === 200 && onSuccess) {
-        const token = data.accessToken;
-        localStorage.setItem("apiToken", token);
         onSuccess(data);
       }
     })

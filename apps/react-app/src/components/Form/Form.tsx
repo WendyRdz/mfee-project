@@ -1,56 +1,47 @@
-import * as React from "react";
-import {
-  Button,
-  TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  MenuItem,
-  SelectChangeEvent,
-} from "@mui/material";
+import * as React from 'react';
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, SelectChangeEvent } from '@mui/material';
 
-import { Category, NewPost, Post } from "../../types";
-import { validator } from "../../common/utils";
-import { PostContext } from "../../context";
-import { FormInputs, Inputs } from "../../types";
+import { Category, CreatePostPayload, Post } from '../../types';
+import { validator } from '../../common/utils';
+import { PostContext } from '../../context';
+import { FormInputs, Inputs } from '../../types';
 
 const inputs: Inputs = [
   {
-    id: "title-id",
-    name: "title",
-    label: "Title",
-    type: "text",
+    id: 'title-id',
+    name: 'title',
+    label: 'Title',
+    type: 'text'
   },
   {
-    id: "description-id",
-    name: "description",
-    label: "Description",
-    type: "text",
+    id: 'description-id',
+    name: 'description',
+    label: 'Description',
+    type: 'text'
   },
   {
-    id: "category-label",
-    name: "category",
-    label: "Category",
-    type: "menu",
+    id: 'category-label',
+    name: 'category',
+    label: 'Category',
+    type: 'menu',
     options: [
-      { id: "663fef70d513515319551d1f", name: "Travel" },
-      { id: "663fef70d513515319546d1f", name: "Food" },
-    ],
+      { id: '663fef70d513515319551d1f', name: 'Travel' },
+      { id: '663fef70d513515319546d1f', name: 'Food' }
+    ]
   },
   {
-    id: "url-id",
-    name: "image",
-    label: "URL of the image",
-    type: "url",
-  },
+    id: 'url-id',
+    name: 'image',
+    label: 'URL of the image',
+    type: 'url'
+  }
 ];
 
 const emptyInputs: FormInputs = {
-  title: { value: "", error: "" },
-  description: { value: "", error: "" },
-  category: { value: "", error: "" },
-  image: { value: "", error: "" },
+  title: { value: '', error: '' },
+  description: { value: '', error: '' },
+  category: { value: '', error: '' },
+  image: { value: '', error: '' }
 };
 
 interface FormProps {
@@ -62,24 +53,17 @@ interface FormProps {
   setSelectedPost: (value: React.SetStateAction<Post | null>) => void;
 }
 
-const Form = ({
-  open,
-  post,
-  categories,
-  selectedCategory,
-  setOpen,
-  setSelectedPost,
-}: FormProps) => {
+const Form = ({ open, post, categories, selectedCategory, setOpen, setSelectedPost }: FormProps) => {
   const [formData, setFormData] = React.useState(emptyInputs);
   const { addPost, updatePostData } = React.useContext(PostContext);
 
   React.useEffect(() => {
     if (!post) return;
     const existingPost = {
-      title: { value: post.title, error: "" },
-      description: { value: post.description, error: "" },
-      category: { value: post.category?._id ?? "", error: "" },
-      image: { value: post.image, error: "" },
+      title: { value: post.title, error: '' },
+      description: { value: post.description, error: '' },
+      category: { value: post.category ?? '', error: '' },
+      image: { value: post.image, error: '' }
     };
     setFormData(existingPost);
   }, [post]);
@@ -97,46 +81,37 @@ const Form = ({
     const containError = inputs.map((input) => input.error).some((v) => !!v);
     if (containError) return;
 
-    const newPost: NewPost = {
+    const newPost: CreatePostPayload = {
       title: formData.title.value,
       image: formData.image.value,
       description: formData.description.value,
-      category: formData.category.value,
+      category: formData.category.value
     };
 
     handleClose();
 
     post
       ? await updatePostData({
-          postID: post.id,
-          updatedPost: newPost,
-          selectedCategoryID: selectedCategory?.id,
+          payload: { ...newPost, id: post.id },
+          selectedCategoryID: selectedCategory?.id
         })
       : await addPost(newPost);
   };
 
-  const handleChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-      | SelectChangeEvent
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: { value, error: "" },
+      [name]: { value, error: '' }
     }));
   };
 
-  const handleBlur = (
-    e:
-      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-      | SelectChangeEvent
-  ) => {
+  const handleBlur = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
     const { name, value } = e.target;
     const error = validator({ name, value });
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: { ...prevFormData[name as keyof FormInputs], error },
+      [name]: { ...prevFormData[name as keyof FormInputs], error }
     }));
   };
 
@@ -145,8 +120,8 @@ const Form = ({
       open={open}
       onClose={handleClose}
       PaperProps={{
-        component: "form",
-        onSubmit: hanldeSubmit,
+        component: 'form',
+        onSubmit: hanldeSubmit
       }}
     >
       <DialogTitle variant="h5" textAlign="center">
@@ -155,7 +130,7 @@ const Form = ({
       <DialogContent>
         {inputs.map((input, idx) => (
           <React.Fragment key={idx}>
-            {(input.type === "text" || input.type === "url") && (
+            {(input.type === 'text' || input.type === 'url') && (
               <TextField
                 required
                 fullWidth
@@ -170,10 +145,10 @@ const Form = ({
                 sx={{ paddingBottom: 2 }}
                 value={formData[input.name].value}
                 error={!!formData[input.name].error}
-                helperText={formData[input.name].error ?? " "}
+                helperText={formData[input.name].error ?? ' '}
               />
             )}
-            {input.type === "menu" && (
+            {input.type === 'menu' && (
               <TextField
                 select
                 required
@@ -186,7 +161,7 @@ const Form = ({
                 onChange={handleChange}
                 value={`${formData[input.name].value}`}
                 error={!!formData[input.name].error}
-                helperText={formData[input.name].error ?? " "}
+                helperText={formData[input.name].error ?? ' '}
               >
                 {categories?.map((option, idx) => (
                   <MenuItem value={option.id ?? option.name} key={idx}>
