@@ -1,12 +1,14 @@
 import axios from "axios";
 
+export const BASE_URL = "http://localhost:3001/api";
+
 const axiosInstance = axios.create();
 const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhdmlkQG91dGxvb2suY29tIiwiaWF0IjoxNzE1ODA1MTQzLCJleHAiOjE3MTU4MDg3NDN9.hsVhN9KdKhGeKZi7-ti-bAkGPS1vahx-qnCrpWMg0Bg";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsYW5yYyIsImlhdCI6MTc1ODUyMDc4OSwiZXhwIjoxNzYxMTEyNzg5fQ.pPtq1A9_3yzKlo0rW-mvXfTnYB65Hk2IyIW6qkexb2c";
 // ACT 11 - Get the token from localStorage
 
 axiosInstance.interceptors.request.use((config) => {
-  config.baseURL = "https://test.neuraac.com/api";
+  config.baseURL = BASE_URL;
   config.headers.Authorization = `Bearer ${token}`;
   config.signal = AbortSignal.timeout(5000);
   return config;
