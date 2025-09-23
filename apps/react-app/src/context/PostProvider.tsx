@@ -5,8 +5,8 @@ import React, {
   useCallback,
 } from "react";
 
-import { NewPost, Post, PostsResponse } from "../types";
 // import { SnackbarContext } from "../context";
+import { CreatePostPayload, Post, UpdatePostPayload } from '../types';
 import {
   createPost,
   deletePost,
@@ -18,7 +18,7 @@ import {
 interface PostContextProps {
   posts: Post[] | null;
   loadingPosts: boolean;
-  addPost: (newPost: NewPost) => void;
+  addPost: (newPost: CreatePostPayload) => void;
   removePost: ({
     postID,
     selectedCategoryID,
@@ -28,12 +28,10 @@ interface PostContextProps {
   }) => void;
   getPostList: (selectedCategoryID?: string) => void;
   updatePostData: ({
-    postID,
-    updatedPost,
+    payload,
     selectedCategoryID,
   }: {
-    postID: string;
-    updatedPost: NewPost;
+    payload: UpdatePostPayload;
     selectedCategoryID?: string;
   }) => void;
 }
@@ -71,16 +69,8 @@ export function PostProvider({
 
   const getPostList = useCallback(
     async (selectedCategoryID?: string) => {
-      const onSuccess = async (data: PostsResponse[]) => {
-        const newList = data.map((post) => ({
-          id: post._id,
-          title: post.title,
-          image: post.image,
-          description: post.description,
-          category: post.category,
-          comments: post.comments,
-        }));
-        setPosts(newList);
+      const onSuccess = async (data: Post[]) => {
+        setPosts(data);
       };
 
       const params = { onSuccess, onError, onLoading };
@@ -92,7 +82,7 @@ export function PostProvider({
   );
 
   const addPost = useCallback(
-    async (newPost: NewPost) => {
+    async (newPost: CreatePostPayload) => {
       const onSuccess = async () => {
         await getPostList();
         // createAlert({
@@ -108,12 +98,10 @@ export function PostProvider({
 
   const updatePostData = useCallback(
     async ({
-      postID,
-      updatedPost,
+      payload,
       selectedCategoryID,
     }: {
-      postID: string;
-      updatedPost: NewPost;
+      payload: UpdatePostPayload;
       selectedCategoryID?: string;
     }) => {
       const onSuccess = async () => {
@@ -124,7 +112,7 @@ export function PostProvider({
         // });
       };
 
-      await updatePost({ postID, updatedPost, onSuccess, onError, onLoading });
+      await updatePost({ payload: payload, onSuccess, onError, onLoading });
     },
     [onError, getPostList]
   );

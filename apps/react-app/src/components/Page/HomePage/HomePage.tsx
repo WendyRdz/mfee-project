@@ -7,7 +7,7 @@ import {
   PostContext,
   // SnackbarContext
 } from "../../../context";
-import { CategoriesResponse, Category, Post } from "../../../types";
+import { Category, Post } from "../../../types";
 import Loading from "../../Loading";
 import CreatePostButton from "../../CreatePostButton";
 import { getCategories } from "../../../api";
@@ -38,12 +38,8 @@ function HomePage() {
   );
 
   const getCategoriesList = useCallback(async () => {
-    const onSuccess = (data: CategoriesResponse[]) => {
-      const newRows = data.map((category) => ({
-        id: category._id,
-        name: category.name,
-      }));
-      setCategories(newRows);
+    const onSuccess = (data: Category[]) => {
+      setCategories(data);
     };
 
     const onError = () => {

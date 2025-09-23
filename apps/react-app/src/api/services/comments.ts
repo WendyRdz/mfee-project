@@ -1,30 +1,30 @@
 import { AxiosError, AxiosResponse } from "axios";
 
 import axios from "../axios";
-import {
-  // Category,
-  CategoriesResponse,
-  // NewCategory
-} from "../../types";
+import { CreateCommentPayload } from "../../types";
 
-export const getCategories = async ({
+export const createComment = async ({
+  postID,
+  newComment,
   onSuccess,
   onError,
   onLoading,
 }: {
-  onSuccess?: (data: CategoriesResponse[]) => void;
+  postID: string;
+  newComment: CreateCommentPayload;
+  onSuccess?: () => void;
   onError?: (error: AxiosError) => void;
   onLoading?: (isLoading: boolean) => void;
 }) => {
   onLoading && onLoading(true);
 
   await axios({
-    url: "/categories",
-    method: "get",
+    method: "post",
+    url: `/posts/${postID}/comments`,
+    data: newComment,
   })
     .then((response: AxiosResponse) => {
-      const data: CategoriesResponse[] = response.data;
-      if (response.status === 200 && onSuccess) onSuccess(data);
+      if (response.status === 201 && onSuccess) onSuccess();
     })
     .catch((error: AxiosError) => {
       console.error(`${error}`);
@@ -32,5 +32,3 @@ export const getCategories = async ({
     })
     .finally(() => onLoading && onLoading(false));
 };
-
-// ACT 9 - Create callbacks fuctions to call create, update and delete endpoints

@@ -1,14 +1,14 @@
 import { AxiosError, AxiosResponse } from "axios";
 
 import axios from "../axios";
-import { PostsResponse, PostResponse, NewPost } from "../../types";
+import { CreatePostPayload, Post, UpdatePostPayload } from '../../types';
 
 export const getPosts = async ({
   onSuccess,
   onError,
   onLoading,
 }: {
-  onSuccess?: (data: PostsResponse[]) => void;
+  onSuccess?: (data: Post[]) => void;
   onError?: (error: AxiosError) => void;
   onLoading?: (isLoading: boolean) => void;
 }) => {
@@ -19,7 +19,7 @@ export const getPosts = async ({
     method: "get",
   })
     .then((response: AxiosResponse) => {
-      const data: PostsResponse[] = response.data;
+      const data: Post[] = response.data;
       if (response.status === 200 && onSuccess) onSuccess(data);
     })
     .catch((error: AxiosError) => {
@@ -36,7 +36,7 @@ export const getPostsByCategory = async ({
   onLoading,
 }: {
   selectedCategoryID: string;
-  onSuccess?: (data: PostsResponse[]) => void;
+  onSuccess?: (data: Post[]) => void;
   onError?: (error: AxiosError) => void;
   onLoading?: (isLoading: boolean) => void;
 }) => {
@@ -47,7 +47,7 @@ export const getPostsByCategory = async ({
     method: "get",
   })
     .then((response: AxiosResponse) => {
-      const data: PostsResponse[] = response.data;
+      const data: Post[] = response.data;
       if (response.status === 200 && onSuccess) onSuccess(data);
     })
     .catch((error: AxiosError) => {
@@ -64,7 +64,7 @@ export const getPost = async ({
   onLoading,
 }: {
   postID: string;
-  onSuccess?: (data: PostResponse) => void;
+  onSuccess?: (data: Post) => void;
   onError?: (error: AxiosError) => void;
   onLoading?: (isLoading: boolean) => void;
 }) => {
@@ -75,7 +75,7 @@ export const getPost = async ({
     method: "get",
   })
     .then((response: AxiosResponse) => {
-      const data: PostResponse = response.data;
+      const data: Post = response.data;
       if (response.status === 200 && onSuccess) onSuccess(data);
     })
     .catch((error: AxiosError) => {
@@ -91,8 +91,8 @@ export const createPost = async ({
   onError,
   onLoading,
 }: {
-  newPost: NewPost;
-  onSuccess?: (data: PostsResponse) => void;
+  newPost: CreatePostPayload;
+  onSuccess?: (data: Post) => void;
   onError?: (error: AxiosError) => void;
   onLoading?: (isLoading: boolean) => void;
 }) => {
@@ -104,7 +104,7 @@ export const createPost = async ({
     data: newPost,
   })
     .then((response: AxiosResponse) => {
-      const data: PostsResponse = response.data;
+      const data: Post = response.data;
       if (response.status === 201 && onSuccess) onSuccess(data);
     })
     .catch((error: AxiosError) => {
@@ -115,27 +115,27 @@ export const createPost = async ({
 };
 
 export const updatePost = async ({
-  postID,
-  updatedPost,
+  payload,
   onSuccess,
   onError,
   onLoading,
 }: {
-  postID: string;
-  updatedPost: NewPost;
-  onSuccess?: (data: PostsResponse) => void;
+  payload: UpdatePostPayload;
+  onSuccess?: (data: Post) => void;
   onError?: (error: AxiosError) => void;
   onLoading?: (isLoading: boolean) => void;
 }) => {
+  const { id, ...updatedPost } = payload;
+
   onLoading && onLoading(true);
 
   await axios({
-    url: `/posts/${postID}`,
+    url: `/posts/${id}`,
     method: "patch",
     data: updatedPost,
   })
     .then((response: AxiosResponse) => {
-      const data: PostsResponse = response.data;
+      const data: Post = response.data;
       if (response.status === 200 && onSuccess) onSuccess(data);
     })
     .catch((error: AxiosError) => {

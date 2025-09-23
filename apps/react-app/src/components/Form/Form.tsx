@@ -10,7 +10,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 
-import { Category, NewPost, Post } from "../../types";
+import { Category, CreatePostPayload, Post } from "../../types";
 import { validator } from "../../common/utils";
 import { PostContext } from "../../context";
 import { FormInputs, Inputs } from "../../types";
@@ -78,7 +78,7 @@ const Form = ({
     const existingPost = {
       title: { value: post.title, error: "" },
       description: { value: post.description, error: "" },
-      category: { value: post.category?._id ?? "", error: "" },
+      category: { value: post.category ?? "", error: "" },
       image: { value: post.image, error: "" },
     };
     setFormData(existingPost);
@@ -97,7 +97,7 @@ const Form = ({
     const containError = inputs.map((input) => input.error).some((v) => !!v);
     if (containError) return;
 
-    const newPost: NewPost = {
+    const newPost: CreatePostPayload = {
       title: formData.title.value,
       image: formData.image.value,
       description: formData.description.value,
@@ -108,9 +108,8 @@ const Form = ({
 
     post
       ? await updatePostData({
-          postID: post.id,
-          updatedPost: newPost,
-          selectedCategoryID: selectedCategory?.id,
+          payload: { ...newPost, id: post.id },
+          selectedCategoryID: selectedCategory?.id
         })
       : await addPost(newPost);
   };
