@@ -4,7 +4,7 @@ import { Grid } from "@mui/material";
 const LoginPage = () => {
   // ACT 9 - Use the login and register endpoints
 
-  // ACT 11 - After the login is successful, save the accesToken in local storage and use the following to direct the user to the home page:
+  // ACT 11 - After the login is successful, save the accessToken in local storage and use the following to direct the user to the home page:
   // const { protocol, host } = window.location;
   // const signInUrl = `${protocol}//${host}/`;
   // if (window.location.href !== signInUrl) {
