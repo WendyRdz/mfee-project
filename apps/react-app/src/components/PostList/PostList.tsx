@@ -41,7 +41,7 @@ function PostList({ posts, selectedCategory, handleOpenForm }: PostListProps) {
                 {post.comments.length > 1 ? " Comments" : " Comment"}
               </h3>
               <h3>{shorten(post.description, 70)}</h3>
-              <Typography variant="overline">{post.category?.name}</Typography>
+              <Typography variant="overline">{post.category}</Typography>
             </CardContent>
             <CardActions className="card-actions">
               <IconButton

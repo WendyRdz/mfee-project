@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import React, { createContext, useCallback, useState } from "react";
+import { BASE_URL } from "../api/axios";
 
 interface AuthContextProps {
   authLoading: boolean;
@@ -25,13 +26,13 @@ export function AuthProvider({
 
   const validateToken = useCallback(async () => {
     const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhdmlkQG91dGxvb2suY29tIiwiaWF0IjoxNzE1ODA1MTQzLCJleHAiOjE3MTU4MDg3NDN9.hsVhN9KdKhGeKZi7-ti-bAkGPS1vahx-qnCrpWMg0Bg";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsYW5yYyIsImlhdCI6MTc1ODUyMDc4OSwiZXhwIjoxNzYxMTEyNzg5fQ.pPtq1A9_3yzKlo0rW-mvXfTnYB65Hk2IyIW6qkexb2c";
       // ACT 11 - Get the token from localStorage
     const onLoading = (isLoading: boolean) => setAuthLoading(isLoading);
 
     onLoading(true);
     await axios({
-      url: "https://test.neuraac.com/api/posts",
+      url: BASE_URL + "/posts",
       method: "get",
       headers: { Authorization: `Bearer ${token}` },
     })
