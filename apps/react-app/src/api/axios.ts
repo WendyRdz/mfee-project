@@ -4,7 +4,6 @@ export const BASE_URL = "http://localhost:3001/api";
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true, // allow cookies for auth endpoints
 });
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsYW5yYyIsImlhdCI6MTc1ODUyMDc4OSwiZXhwIjoxNzYxMTEyNzg5fQ.pPtq1A9_3yzKlo0rW-mvXfTnYB65Hk2IyIW6qkexb2c";

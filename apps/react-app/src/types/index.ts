@@ -11,11 +11,11 @@ export type FormInputs = {
 };
 
 export interface Alert {
-  severity?: "error" | "warning" | "info" | "success";
+  severity?: 'error' | 'warning' | 'info' | 'success';
   message: string;
 }
 
-export type Order = "asc" | "desc";
+export type Order = 'asc' | 'desc';
 
 export interface TableData {
   [key: string]: string;
@@ -111,6 +111,8 @@ export interface CreateCommentPayload {
 
 export interface AuthResponse {
   message: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface MeResponse {
